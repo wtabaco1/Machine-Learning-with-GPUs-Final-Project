@@ -29,31 +29,35 @@ def main():
     sexes = "SEX.csv"
 
     # ~~~SECTION 1.1: Reading the CSV file~~~ #
-    df = pd.read_csv(dataset)
+    df = pd.read_csv(dataset) # Reads the .csv file
     #print(df) # For debugging
+
+
 
     # ~~~SECTION 1.2: Preparing/Cleaning the data (i.e., check for NaNs and duplicates, incorrect labels, etc.)~~~ #
     tempDF = df # This temporary dataframe will copy the dataframe. Its purpose is to perform EDA.
     #print(tempDF) # For debugging
 
     tempDF.drop_duplicates() # Drops any duplicates from the dataset
-    tempDF = tempDF.drop(columns=['Id','IndicatorCode','TimeDimension','Comments']) # Drop the columns that have constant values or aren't that meaningful.
-    print(tempDF) # For debugging
+    tempDF = tempDF.drop(columns=['Id','IndicatorCode','TimeDimension','Comments','SpatialDimension']) # Drop the columns that have constant values or aren't that meaningful.
+    #print(tempDF.columns) # For debugging
 
-
+    emptyCol = tempDF.columns[tempDF.isnull().all()] # Checks if the entire column is empty
+    tempDF = tempDF.drop(columns=emptyCol)  # Drops all the columns that are completely empty
+    #print(tempDF.columns) # For debugging
+    #print(tempDF) # For debugging
 
     newDF = tempDF # Sets the new dataframe to the cleaned dataframe from the temporary dataframe.
     #print(newDF) # For debugging
 
+
+
     # ~~~SECTION 1.3: Identifying the target variable and features~~~ #
-    X = None
-    y = newDF['NumericValue'] # 
-    print(y) # For debugging
 
 
 
     # ~~~FINAL SECTION: Final dataframe for EDA Update Presentation on April 18, 2025~~~ #
-
+    
 
 
 
