@@ -22,8 +22,7 @@ def main():
     # 'And so it begins... war...' -Winstar
     dataset = "ASSISTIVETECH_TOTALNEED.csv"
     
-    # These following variables below are used for encoding non-numerical values to fit into the covariance matrix
-
+    # The following variables below are used for encoding non-numerical values to fit into the covariance matrix
     age_group = "AGEGROUP.csv"
     ageGroup = pd.read_csv(age_group)
     ageList = ageGroup["Code"].tolist()
@@ -48,6 +47,34 @@ def main():
     sexesCSV = pd.read_csv(sexes)
     sexList = sexesCSV["Code"].tolist()
     #print(sexList) # For debugging
+
+    # Mapping the codes to their own dictionaries
+    encodeAge = {}
+    for i in range(len(ageList)):
+        encodeAge.update({ageList[i]:i})
+    #print(encodeAge) # For debugging
+
+    encodeProduct = {}
+    for i in range(len(productList)):
+        encodeProduct.update({productList[i]:i})
+    #print(encodeProduct) # For debugging
+
+    encodeCountry = {}
+    for i in range(len(countryList)):
+        encodeCountry.update({countryList[i]:i})
+    #print(encodeCountry) # For debugging
+
+    encodeResidence = {}
+    for i in range(len(residenceList)):
+        encodeResidence.update({residenceList[i]:i})
+    #print(encodeResidence) # For debugging
+
+    encodeSex = {}
+    for i in range(len(sexList)):
+        encodeSex.update({sexList[i]:i})
+    #print(encodeSex) # For debugging
+
+
 
     # ~~~SECTION 1.1: Reading the CSV file~~~ #
     df = pd.read_csv(dataset) # Reads the .csv file
