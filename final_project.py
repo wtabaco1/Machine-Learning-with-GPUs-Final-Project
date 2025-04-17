@@ -21,7 +21,13 @@ def main():
 
     # 'And so it begins... war...' -Winstar
     dataset = "ASSISTIVETECH_TOTALNEED.csv"
+
     
+
+    # ~~~SECTION 1.1: Reading the CSV file~~~ #
+    df = pd.read_csv(dataset) # Reads the .csv file
+    #print(df) # For debugging
+
     # The following variables below are used for encoding non-numerical values to fit into the covariance matrix
     age_group = "AGEGROUP.csv"
     ageGroup = pd.read_csv(age_group)
@@ -74,12 +80,12 @@ def main():
         encodeSex.update({sexList[i]:i})
     #print(encodeSex) # For debugging
 
-
-
-    # ~~~SECTION 1.1: Reading the CSV file~~~ #
-    df = pd.read_csv(dataset) # Reads the .csv file
-    #print(df) # For debugging
-
+    disaggDim = df["DisaggregatingDimension1"].tolist()
+    disaggDim = list(set(disaggDim))
+    encodeDisaggDim = {}
+    for i in range(len(disaggDim)):
+        encodeDisaggDim.update({disaggDim[i]:i})
+    #print(encodeDisaggDim) # For debugging
 
 
     # ~~~SECTION 1.2: Preparing/Cleaning the data (i.e., check for NaNs and duplicates, incorrect labels, etc.)~~~ #
@@ -95,11 +101,14 @@ def main():
     #print(tempDF.columns) # For debugging
     #print(tempDF) # For debugging
 
-    # Encoding non-numerical values
+    # Encoding non-numerical values (USE AS TEMPLATE FOR ENCODING: newDF['Class']= newDF['Class'].map(class_Labels))
+    tempDF["DisaggregatingDimension1"] = tempDF["DisaggregatingDimension1"].map(encodeDisaggDim) # Encoding the disaggregate dimensions
+    tempDF["SpatialDimensionValueCode"] = tempDF["SpatialDimensionValueCode"].map(encodeCountry) # Encoding the countries
+    print(tempDF) # For debugging
 
 
 
-    newDF = tempDF # Sets the new dataframe to the cleaned dataframe from the temporary dataframe.
+    finalDF = tempDF # Sets the new dataframe to the cleaned dataframe from the temporary dataframe.
     #print(newDF) # For debugging
 
 
@@ -109,7 +118,8 @@ def main():
 
 
     # ~~~FINAL SECTION: Final dataframe for EDA Update Presentation on April 18, 2025~~~ #
-    
+    #print(finalDF)
+
 
 
 
