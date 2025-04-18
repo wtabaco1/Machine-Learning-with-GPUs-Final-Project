@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sb
 import statsmodels as sts
@@ -93,7 +93,7 @@ def main():
     #print(tempDF) # For debugging
 
     tempDF.drop_duplicates() # Drops any duplicates from the dataset
-    tempDF = tempDF.drop(columns=['Id','IndicatorCode','TimeDimension','Comments','SpatialDimension']) # Drop the columns that have constant values or aren't that meaningful.
+    tempDF = tempDF.drop(columns=['Id','IndicatorCode','TimeDimension','Comments','SpatialDimension', 'TimeDim','TimeDimensionBegin','TimeDimensionEnd','Value','Date','DisaggregatingDimension2','DisaggregatingDimension2ValueCode']) # Drop the columns that have constant values or aren't that meaningful.
     #print(tempDF.columns) # For debugging
 
     emptyCol = tempDF.columns[tempDF.isnull().all()] # Checks if the entire column is empty
@@ -104,22 +104,37 @@ def main():
     # Encoding non-numerical values (USE AS TEMPLATE FOR ENCODING: newDF['Class']= newDF['Class'].map(class_Labels))
     tempDF["DisaggregatingDimension1"] = tempDF["DisaggregatingDimension1"].map(encodeDisaggDim) # Encoding the disaggregate dimensions
     tempDF["SpatialDimensionValueCode"] = tempDF["SpatialDimensionValueCode"].map(encodeCountry) # Encoding the countries
-    print(tempDF) # For debugging
 
-
-
+    multi_Dictionary = {**encodeProduct, **encodeResidence, **encodeAge, **encodeSex}
+    tempDF["DisaggregatingDimension1ValueCode"] = tempDF["DisaggregatingDimension1ValueCode"].map(multi_Dictionary)
+    #print(tempDF) # For debugging
+    
     finalDF = tempDF # Sets the new dataframe to the cleaned dataframe from the temporary dataframe.
-    #print(newDF) # For debugging
+    #print(finalDF) # For debugging
 
 
 
     # ~~~SECTION 1.3: Identifying the target variable and features~~~ #
-
+    corr_Matrix= finalDF.corr()
+    print('\nCorrelation Matrix:\n', corr_Matrix, '\n\n')
+    #print('\n',newDF)      # For debugging
+    plt.imshow(corr_Matrix, cmap=None, norm=None)
+    plt.title('Correlation Matrix')
+    plt.show()
+    
 
 
     # ~~~FINAL SECTION: Final dataframe for EDA Update Presentation on April 18, 2025~~~ #
     #print(finalDF)
+    features = []
+    for feature in finalDF.columns:
+        # The top strongest features based off the correlation matrix analysis
+        if feature == 'DisaggregatingDimension1' or feature == 'DisaggregatingDimension1ValueCode' or 'TimeDimensionValue' or 'SpatialDimensionValueCode':
+            features.append(feature)
 
+        # Otherwise, ignore the other features
+        else:
+            continue
 
 
 
